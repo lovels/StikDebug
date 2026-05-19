@@ -18,6 +18,7 @@ struct SettingsView: View {
     @AppStorage("keepAliveAudio") private var keepAliveAudio = true
     @AppStorage("keepAliveLocation") private var keepAliveLocation = true
     @AppStorage("customTargetIP") private var customTargetIP = ""
+    @AppStorage(ChinaCoordinateConverter.preferenceKey) private var chinaCoordinateCorrection = true
 
     @State private var isShowingPairingFilePicker = false
     @State private var isImportingFile = false
@@ -117,6 +118,14 @@ struct SettingsView: View {
                         VStack(alignment: .leading, spacing: 2) {
                             Text("Always Run Scripts")
                             Text("Treats device as TXM-capable to bypass hardware checks.")
+                                .font(.caption).foregroundStyle(.secondary)
+                        }
+                    }
+
+                    Toggle(isOn: $chinaCoordinateCorrection) {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("China Coordinate Correction")
+                            Text("Converts GCJ-02 map coordinates to WGS-84 before simulating location, fixing the offset seen in mainland China. No effect elsewhere.")
                                 .font(.caption).foregroundStyle(.secondary)
                         }
                     }

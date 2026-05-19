@@ -1569,7 +1569,17 @@ struct LocationSimulationView: View {
     }
 
     private func locationUpdateCode(for coordinate: CLLocationCoordinate2D) -> Int32 {
-        simulate_location(deviceIP, coordinate.latitude, coordinate.longitude, pairingFilePath)
+        // MapKit coordinates inside mainland China are GCJ-02; the simulated
+        // GPS that apps read is interpreted as WGS-84. Convert before sending
+        // so the simulated position matches the visible pin. Outside mainland
+        // China this is a no-op.
+        let target: CLLocationCoordinate2D
+        if ChinaCoordinateConverter.isEnabled {
+            target = ChinaCoordinateConverter.gcj02ToWgs84(coordinate)
+        } else {
+            target = coordinate
+        }
+        return simulate_location(deviceIP, target.latitude, target.longitude, pairingFilePath)
     }
 }
 
